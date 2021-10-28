@@ -26,6 +26,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
             self.center.y - 40
         )
         self.vertex_positions = {}
+        self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
 
     @staticmethod
     def build(vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -61,7 +62,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
 
     def draw_vertices(self):
         '''Draw the verticies of the graph'''
-        for _vertex, position in self.vertex_positions.items():
+        for vertex, position in self.vertex_positions.items():
             pygame.draw.circle(
                 self.screen,
                 (255, 255, 255),
@@ -75,6 +76,11 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 5,
                 1
             )
+            self.screen.blit(self.font.render(
+                vertex,
+                True,
+                (150, 150, 150)
+            ), position)
 
     def draw_edges(self):
         '''Draw the edges of the graph'''
@@ -95,13 +101,14 @@ class DisplayGraph(pgt.GameScreen, Graph):
 def main():
     '''driver code'''
     g = DisplayGraph.build(
-        {'a', 'b', 'c', 'd'},
+        {'a', 'b', 'c', 'd', 'e'},
         [
             {'a', 'b'},
             {'b', 'c'},
             {'a', 'c'},
             {'c', 'd'},
-            {'a', 'd'}
+            {'a', 'd'},
+            {'b', 'e'}
         ]
     )
     g.run()
