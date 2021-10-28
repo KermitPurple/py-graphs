@@ -25,7 +25,6 @@ class Graph():
             g.add_edge(*edge)
         return g
 
-
     def contains_vertex(self, vertex: str) -> bool:
         '''
         checks if a vertex is in the verticies
@@ -47,7 +46,6 @@ class Graph():
 
     def remove_vertex(self, vertex: str) -> bool:
         '''
-
         :returns: True if the vertex was successfully removed
         '''
         if not self.contains_vertex(vertex):
