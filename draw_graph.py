@@ -57,7 +57,6 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 math.cos(rads) * self.vertex_positions_radii.x + self.center.x,
                 math.sin(rads) * self.vertex_positions_radii.y + self.center.y
             )
-        print(result, self.window_size, self.center)
         return result
 
     def draw_vertices(self):
