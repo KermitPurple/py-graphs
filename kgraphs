@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+for i in $(seq 20) 
+do
+    python3 -c "from interactive import d;from itertools import product;s=list(map(str,range($i)));d(s, list(filter(lambda e: len(e)==2,map(lambda e: {e[0],e[1]}, product(s,s)))))"
+done;
