@@ -13,5 +13,6 @@ def draw_new_graph(verticies: Set[str], edges: List[Set[str]]):
 
 d = draw_new_graph
 
-help(draw_new_graph)
-print('use \'draw_new_graph\' or \'d\' functionn to create a graph')
+if __name__ == "__main__":
+    help(draw_new_graph)
+    print('use \'draw_new_graph\' or \'d\' function to create a graph')
