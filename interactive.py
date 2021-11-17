@@ -1,3 +1,5 @@
+#!/usr/bin/env python3 -i
+
 from typing import Set, List
 from draw_graph import DisplayGraph
 import pygame
