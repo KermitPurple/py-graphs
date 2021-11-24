@@ -6,6 +6,17 @@ import math
 import pygame
 import pygame_tools as pgt
 
+def distance_from_line(start: pgt.Point, end: pgt.Point, point: pgt.Point) -> float:
+    '''
+    measure the distance between a point and a line
+    used https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line as a reference
+    :start: the start of the line
+    :end: the end of the line
+    :point: the point to measure
+    :returns: the distance between the line and the point
+    '''
+    return abs((end.x - start.x) * (start.y - point.y) - (start.x - point.x) * (end.y - start.y)) / math.sqrt((end.x - start.x) ** 2 + (end.y - start.y) ** 2)
+
 class DisplayGraph(pgt.GameScreen, Graph):
     point_radius = 5
     possible_names = 'abcdefghijklmnopqrstuvwxyzABCDEFGJIJKLMNOPQRSTUVWXYZ'
@@ -31,6 +42,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.selected_vertex = None
         self.highlighted_vertex = None
+        self.selected_edge = None
 
     @classmethod
     def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -88,7 +100,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         for v1, v2 in self.edges:
             pygame.draw.line(
                 self.screen,
-                (255, 255, 255),
+                (0, 255, 0) if self.selected_edge == {v1, v2} else (255, 255, 255),
                 self.vertex_positions[v1],
                 self.vertex_positions[v2],
                 3
@@ -118,6 +130,9 @@ class DisplayGraph(pgt.GameScreen, Graph):
             if self.highlighted_vertex is not None:
                 self.remove_vertex(self.highlighted_vertex)
                 self.highlighted_vertex = None
+            elif self.selected_edge is not None:
+                self.remove_edge(*self.selected_edge)
+                self.selected_edge = None
         elif unicode == 'a':
             self.add_new_vertex()
 
@@ -133,8 +148,18 @@ class DisplayGraph(pgt.GameScreen, Graph):
             if pgt.Point.distance(pos, mouse_pos) < self.point_radius:
                 self.selected_vertex = vertex
                 self.highlighted_vertex = vertex
+                self.selected_edge = None
                 return
         self.highlighted_vertex = None
+        for v1, v2 in self.edges:
+            d = distance_from_line(
+                self.vertex_positions[v1],
+                self.vertex_positions[v2],
+                mouse_pos
+            )
+            if d < 2:
+                self.selected_edge = {v1, v2}
+                return
 
     def mouse_button_up(self, event: pygame.event.Event):
         '''
