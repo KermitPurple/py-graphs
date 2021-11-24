@@ -29,6 +29,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.vertex_positions = {}
         self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.selected_vertex = None
+        self.highlighted_vertex = None
 
     @classmethod
     def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -64,7 +65,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         for vertex, position in self.vertex_positions.items():
             pygame.draw.circle(
                 self.screen,
-                (255, 255, 255),
+                (255, 0, 0 ) if vertex == self.highlighted_vertex else (255, 255, 255),
                 position,
                 self.point_radius
             )
@@ -115,7 +116,9 @@ class DisplayGraph(pgt.GameScreen, Graph):
         for vertex, pos in self.vertex_positions.items():
             if pgt.Point.distance(pos, mouse_pos) < self.point_radius:
                 self.selected_vertex = vertex
+                self.highlighted_vertex = vertex
                 return
+        self.highlighted_vertex = None
 
     def mouse_button_up(self, event: pygame.event.Event):
         if event.button != 1: # not left click
