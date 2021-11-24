@@ -7,6 +7,7 @@ import pygame
 import pygame_tools as pgt
 
 class DisplayGraph(pgt.GameScreen, Graph):
+    point_radius = 5
     def __init__(self):
         Graph.__init__(self)
         pygame.init()
@@ -27,6 +28,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         )
         self.vertex_positions = {}
         self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
+        self.selected_vertex = None
 
     @staticmethod
     def build(vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -67,13 +69,13 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 self.screen,
                 (255, 255, 255),
                 position,
-                5
+                self.point_radius
             )
             pygame.draw.circle(
                 self.screen,
                 (200, 200, 200),
                 position,
-                5,
+                self.point_radius,
                 1
             )
             self.screen.blit(self.font.render(
@@ -93,10 +95,29 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 3
             )
 
+    def update_selected_vertex(self):
+        if self.selected_vertex is not None:
+            self.vertex_positions[self.selected_vertex] = self.get_scaled_mouse_pos()
+
     def update(self):
         self.screen.fill((0, 0, 0))
+        self.update_selected_vertex()
         self.draw_edges()
         self.draw_vertices()
+
+    def mouse_button_down(self, event: pygame.event.Event):
+        if event.button != 1: # not left click
+            return
+        mouse_pos = self.get_scaled_mouse_pos()
+        for vertex, pos in self.vertex_positions.items():
+            if pgt.Point.distance(pos, mouse_pos) < self.point_radius:
+                self.selected_vertex = vertex
+                return
+
+    def mouse_button_up(self, event: pygame.event.Event):
+        if event.button != 1: # not left click
+            return
+        self.selected_vertex = None
 
 def main():
     '''driver code'''
