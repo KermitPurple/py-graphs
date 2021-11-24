@@ -32,6 +32,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.selected_vertex = None
         self.highlighted_vertex = None
         self.selected_edge = None
+        self.adding_edge = False
 
     @classmethod
     def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -95,6 +96,18 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 3
             )
 
+    def draw_new_edge(self):
+        '''draw a preview of a new edge'''
+        if self.highlighted_vertex is None:
+            return
+        pygame.draw.line(
+            self.screen,
+            (0, 255, 0),
+            self.vertex_positions[self.highlighted_vertex],
+            self.get_scaled_mouse_pos(),
+            3
+        )
+
     def update_selected_vertex(self):
         '''move the selected vertex to the mouse position'''
         if self.selected_vertex is not None:
@@ -105,6 +118,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.update_selected_vertex()
         self.draw_edges()
         self.draw_vertices()
+        if self.adding_edge:
+            self.draw_new_edge()
 
     def key_down(self, event: pygame.event.Event):
         '''
@@ -123,7 +138,14 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 self.remove_edge(*self.selected_edge)
                 self.selected_edge = None
         elif unicode == 'a':
-            self.add_new_vertex()
+            vertex = self.add_new_vertex()
+            if self.adding_edge:
+                self.adding_edge = False
+                self.add_edge(self.highlighted_vertex, vertex)
+            self.selected_edge = None
+            self.highlighted_vertex = None
+        elif unicode == 'e' and self.highlighted_vertex is not None:
+                self.adding_edge = True
 
     def mouse_button_down(self, event: pygame.event.Event):
         '''
@@ -135,6 +157,9 @@ class DisplayGraph(pgt.GameScreen, Graph):
         mouse_pos = self.get_scaled_mouse_pos()
         for vertex, pos in self.vertex_positions.items():
             if pgt.Point.distance(pos, mouse_pos) < self.point_radius:
+                if self.adding_edge:
+                    self.add_edge(self.highlighted_vertex, vertex)
+                    self.adding_edge = False
                 self.selected_vertex = vertex
                 self.highlighted_vertex = vertex
                 self.selected_edge = None
@@ -181,18 +206,18 @@ class DisplayGraph(pgt.GameScreen, Graph):
             return True
         return False
 
-    def add_new_vertex(self) -> bool:
+    def add_new_vertex(self) -> str:
         '''
         add a new vertex without a given name
-        :returns: True if successful
+        :returns: name of the vertex if success or else false
         '''
         for name in self.possible_names:
             if self.contains_vertex(name):
                 continue
             else:
                 self.add_vertex(name)
-                return True
-        return False
+                return name
+        return None
 
 def main():
     '''driver code'''
