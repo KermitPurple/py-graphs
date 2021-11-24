@@ -105,6 +105,12 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.draw_edges()
         self.draw_vertices()
 
+    def key_down(self, event: pygame.event.Event):
+        unicode = event.unicode.lower()
+        if unicode == 'r':
+            self.vertex_positions = self.calculate_vertex_positions()
+
+
     def mouse_button_down(self, event: pygame.event.Event):
         if event.button != 1: # not left click
             return
