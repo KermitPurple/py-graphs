@@ -13,12 +13,12 @@ class Graph():
     def __str__(self):
         return f'Graph(V={self.vertices}, E={self.edges})'
 
-    @staticmethod
-    def build(vertices: Set[str], edges: List[Set[str]]) -> 'Graph':
+    @classmethod
+    def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'Graph':
         '''
         builds a graph from the given verticies and edges
         '''
-        g = Graph()
+        g = cls()
         for vertex in vertices:
             g.add_vertex(vertex)
         for edge in edges:

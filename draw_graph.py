@@ -30,16 +30,12 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.selected_vertex = None
 
-    @staticmethod
-    def build(vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
+    @classmethod
+    def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
         '''
         builds a display graph from the given vertices and edges
         '''
-        g = DisplayGraph()
-        for vertex in vertices:
-            g.add_vertex(vertex)
-        for edge in edges:
-            g.add_edge(*edge)
+        g = super().build(vertices, edges)
         g.vertex_positions = g.calculate_vertex_positions()
         return g
 
