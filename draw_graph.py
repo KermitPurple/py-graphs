@@ -65,7 +65,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         for vertex, position in self.vertex_positions.items():
             pygame.draw.circle(
                 self.screen,
-                (255, 0, 0 ) if vertex == self.highlighted_vertex else (255, 255, 255),
+                (0, 255, 0 ) if vertex == self.highlighted_vertex else (255, 255, 255),
                 position,
                 self.point_radius
             )
@@ -107,7 +107,11 @@ class DisplayGraph(pgt.GameScreen, Graph):
         unicode = event.unicode.lower()
         if unicode == 'r':
             self.vertex_positions = self.calculate_vertex_positions()
-
+        # d or backspace
+        elif unicode == 'd' or unicode == '\x08':
+            if self.highlighted_vertex is not None:
+                self.remove_vertex(self.highlighted_vertex)
+                self.highlighted_vertex = None
 
     def mouse_button_down(self, event: pygame.event.Event):
         if event.button != 1: # not left click
@@ -124,6 +128,11 @@ class DisplayGraph(pgt.GameScreen, Graph):
         if event.button != 1: # not left click
             return
         self.selected_vertex = None
+
+    def remove_vertex(self, vertex: str) -> bool:
+        result = super().remove_vertex(vertex)
+        del self.vertex_positions[vertex]
+        return result
 
 def main():
     '''driver code'''
