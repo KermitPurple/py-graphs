@@ -33,7 +33,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
     @staticmethod
     def build(vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
         '''
-        builds a display graph from the given verticies and edges
+        builds a display graph from the given vertices and edges
         '''
         g = DisplayGraph()
         for vertex in vertices:
@@ -54,7 +54,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
         elif size == 1:
             return {list(self.vertices)[0]: pgt.Point(self.window_size.x // 2, self.window_size.y // 2)}
         result = {}
-        for i, vertex in enumerate(self.vertices):
+        vertices = sorted(self.vertices)
+        for i, vertex in enumerate(vertices):
             rads = i / size * math.pi * 2
             result[vertex] = pgt.Point(
                 math.cos(rads) * self.vertex_positions_radii.x + self.center.x,
@@ -63,7 +64,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         return result
 
     def draw_vertices(self):
-        '''Draw the verticies of the graph'''
+        '''Draw the vertices of the graph'''
         for vertex, position in self.vertex_positions.items():
             pygame.draw.circle(
                 self.screen,
