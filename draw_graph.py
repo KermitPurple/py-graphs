@@ -8,6 +8,7 @@ import pygame_tools as pgt
 
 class DisplayGraph(pgt.GameScreen, Graph):
     point_radius = 5
+    possible_names = 'abcdefghijklmnopqrstuvwxyzABCDEFGJIJKLMNOPQRSTUVWXYZ'
     def __init__(self):
         Graph.__init__(self)
         pygame.init()
@@ -112,6 +113,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
             if self.highlighted_vertex is not None:
                 self.remove_vertex(self.highlighted_vertex)
                 self.highlighted_vertex = None
+        elif unicode == 'a':
+            self.add_new_vertex()
 
     def mouse_button_down(self, event: pygame.event.Event):
         if event.button != 1: # not left click
@@ -133,6 +136,20 @@ class DisplayGraph(pgt.GameScreen, Graph):
         result = super().remove_vertex(vertex)
         del self.vertex_positions[vertex]
         return result
+
+    def add_vertex(self, vertex: str) -> bool:
+        if super().add_vertex(vertex):
+            self.vertex_positions[vertex] = self.get_scaled_mouse_pos()
+            return True
+        return False
+
+    def add_new_vertex(self) -> bool:
+        for name in self.possible_names:
+            if self.contains_vertex(name):
+                continue
+            else:
+                self.add_vertex(name)
+                return
 
 def main():
     '''driver code'''
