@@ -52,7 +52,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         result = {}
         vertices = sorted(self.vertices)
         for i, vertex in enumerate(vertices):
-            rads = i / size * math.pi * 2
+            rads = i / size * math.pi * 2 - math.pi / 2
             result[vertex] = pgt.Point(
                 math.cos(rads) * self.vertex_positions_radii.x + self.center.x,
                 math.sin(rads) * self.vertex_positions_radii.y + self.center.y
