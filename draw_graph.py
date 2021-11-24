@@ -95,6 +95,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
             )
 
     def update_selected_vertex(self):
+        '''move the selected vertex to the mouse position'''
         if self.selected_vertex is not None:
             self.vertex_positions[self.selected_vertex] = self.get_scaled_mouse_pos()
 
@@ -105,6 +106,10 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.draw_vertices()
 
     def key_down(self, event: pygame.event.Event):
+        '''
+        called when key is pressed
+        :event: event of when the key is pressed
+        '''
         unicode = event.unicode.lower()
         if unicode == 'r':
             self.vertex_positions = self.calculate_vertex_positions()
@@ -117,6 +122,10 @@ class DisplayGraph(pgt.GameScreen, Graph):
             self.add_new_vertex()
 
     def mouse_button_down(self, event: pygame.event.Event):
+        '''
+        called when mouse button is pressed
+        :event: event of when the mouse button is pressed
+        '''
         if event.button != 1: # not left click
             return
         mouse_pos = self.get_scaled_mouse_pos()
@@ -128,28 +137,47 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.highlighted_vertex = None
 
     def mouse_button_up(self, event: pygame.event.Event):
+        '''
+        called when mouse button is released
+        :event: event of when the mouse button is released
+        '''
         if event.button != 1: # not left click
             return
         self.selected_vertex = None
 
     def remove_vertex(self, vertex: str) -> bool:
+        '''
+        remove a vertex with a given name
+        :vertex: the name of the vertex to addd
+        :returns: True if successful
+        '''
         result = super().remove_vertex(vertex)
         del self.vertex_positions[vertex]
         return result
 
     def add_vertex(self, vertex: str) -> bool:
+        '''
+        add a vertex given a name
+        :vertex: the name of the vertex to add
+        :returns: True if successful
+        '''
         if super().add_vertex(vertex):
             self.vertex_positions[vertex] = self.get_scaled_mouse_pos()
             return True
         return False
 
     def add_new_vertex(self) -> bool:
+        '''
+        add a new vertex without a given name
+        :returns: True if successful
+        '''
         for name in self.possible_names:
             if self.contains_vertex(name):
                 continue
             else:
                 self.add_vertex(name)
-                return
+                return True
+        return False
 
 def main():
     '''driver code'''
