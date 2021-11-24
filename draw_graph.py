@@ -149,6 +149,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
             if d < 2:
                 self.selected_edge = {v1, v2}
                 return
+        self.selected_edge = None
 
     def mouse_button_up(self, event: pygame.event.Event):
         '''
