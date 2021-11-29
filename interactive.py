@@ -4,7 +4,7 @@ from typing import Set, List
 from draw_graph import DisplayGraph
 import pygame
 
-def draw_new_graph(verticies: Set[str], edges: List[Set[str]]):
+def draw_new_graph(verticies: Set[str] = set(), edges: List[Set[str]] = []):
     '''
     create new graph and render it
     :verticies: a set of strings representing the verticies of the graph
