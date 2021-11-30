@@ -270,6 +270,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
         '''
         if not super().rename_vertex(old, new):
             return False
+        if self.highlighted_vertex == old:
+            self.highlighted_vertex = new
         self.vertex_positions[new] = self.vertex_positions[old]
         del self.vertex_positions[old]
         return True
