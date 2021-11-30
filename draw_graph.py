@@ -33,6 +33,25 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.highlighted_vertex = None
         self.selected_edge = None
         self.adding_edge = False
+        input_height = self.window_size.y // 4
+        self.input_box = pgt.InputBox(
+            pygame.Rect(
+                self.window_size.x // 10,
+                self.center.y - input_height // 2,
+                self.window_size.x * 8 // 10,
+                input_height,
+            ),
+            'darkgrey',
+            'black',
+            0,
+            None,
+            pygame.font.Font(pygame.font.get_default_font(), 40),
+        )
+        self.getting_new_name = False
+
+    def reset_input(self):
+        self.input_box.reset()
+        self.getting_new_name = False
 
     @classmethod
     def build(cls, vertices: Set[str], edges: List[Set[str]]) -> 'DisplayGraph':
@@ -120,12 +139,23 @@ class DisplayGraph(pgt.GameScreen, Graph):
         self.draw_vertices()
         if self.adding_edge:
             self.draw_new_edge()
+        if self.getting_new_name:
+            self.input_box.draw(self.screen)
 
     def key_down(self, event: pygame.event.Event):
         '''
         called when key is pressed
         :event: event of when the key is pressed
         '''
+        if self.getting_new_name:
+            self.input_box.update(event)
+            if self.input_box.done:
+                self.rename_vertex(
+                    self.highlighted_vertex,
+                    self.input_box.get_value()
+                )
+                self.reset_input()
+            return
         match event.unicode.lower():
             case 'r':
                 self.vertex_positions = self.calculate_vertex_positions()
@@ -147,6 +177,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 self.adding_edge = True
             case 'c':
                 self.clear()
+            case 'n' if self.highlighted_vertex is not None:
+                self.getting_new_name = True
 
     def mouse_button_down(self, event: pygame.event.Event):
         '''
@@ -155,6 +187,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
         '''
         if event.button != 1: # not left click
             return
+        self.reset_input()
         mouse_pos = self.get_scaled_mouse_pos()
         for vertex, pos in self.vertex_positions.items():
             if pgt.Point.distance(pos, mouse_pos) < self.point_radius:
