@@ -138,3 +138,20 @@ class Graph():
         '''
         self.edges = []
         self.vertices = set()
+
+    def rename_vertex(self, old: str, new: str) -> bool:
+        '''
+        renames a vertex from {old} to {new}
+        :old: initial name of vertex
+        :new: new name of vertex
+        :returns: True if successful
+        '''
+        if old not in self.vertices or new in self.vertices:
+            return False
+        self.vertices.remove(old)
+        self.vertices.add(new)
+        for edge in self.edges:
+            if old in edge:
+                edge.remove(old)
+                edge.add(new)
+        return True

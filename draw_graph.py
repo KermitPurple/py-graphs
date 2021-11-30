@@ -227,6 +227,19 @@ class DisplayGraph(pgt.GameScreen, Graph):
         super().clear()
         self.vertex_positions = {}
 
+    def rename_vertex(self, old: str, new: str) -> bool:
+        '''
+        renames a vertex from {old} to {new}
+        :old: initial name of vertex
+        :new: new name of vertex
+        :returns: True if successful
+        '''
+        if not super().rename_vertex(old, new):
+            return False
+        self.vertex_positions[new] = self.vertex_positions[old]
+        del self.vertex_positions[old]
+        return True
+
 def main():
     '''driver code'''
     g = DisplayGraph.build(
@@ -240,6 +253,7 @@ def main():
             {'b', 'e'}
         ]
     )
+    g.rename_vertex('a', 'frank')
     g.run()
 
 if __name__ == "__main__":
