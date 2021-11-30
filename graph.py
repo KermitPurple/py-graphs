@@ -131,3 +131,10 @@ class Graph():
         for vertex in self.vertices:
             result += get_paths_helper([vertex])
         return result
+
+    def clear(self):
+        '''
+        completely clears the graph of verticies and edges
+        '''
+        self.edges = []
+        self.vertices = set()

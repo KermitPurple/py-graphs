@@ -219,6 +219,13 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 return name
         return None
 
+    def clear(self):
+        '''
+        completely clears the graph of verticies and edges
+        '''
+        super().clear()
+        self.vertex_positions = {}
+
 def main():
     '''driver code'''
     g = DisplayGraph.build(
