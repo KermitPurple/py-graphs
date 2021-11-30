@@ -46,6 +46,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
             0,
             None,
             pygame.font.Font(pygame.font.get_default_font(), 40),
+            True
         )
         self.getting_new_name = False
 

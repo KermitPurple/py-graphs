@@ -1,1 +1,1 @@
-pygame_tools==0.0.5
+pygame_tools==0.0.8
