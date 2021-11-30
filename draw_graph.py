@@ -145,6 +145,8 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 self.highlighted_vertex = None
             case 'e' if self.highlighted_vertex is not None:
                 self.adding_edge = True
+            case 'c':
+                self.clear()
 
     def mouse_button_down(self, event: pygame.event.Event):
         '''
