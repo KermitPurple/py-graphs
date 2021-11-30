@@ -126,25 +126,24 @@ class DisplayGraph(pgt.GameScreen, Graph):
         called when key is pressed
         :event: event of when the key is pressed
         '''
-        unicode = event.unicode.lower()
-        if unicode == 'r':
-            self.vertex_positions = self.calculate_vertex_positions()
-        # d or backspace
-        elif unicode == 'd' or unicode == '\x08':
-            if self.highlighted_vertex is not None:
-                self.remove_vertex(self.highlighted_vertex)
-                self.highlighted_vertex = None
-            elif self.selected_edge is not None:
-                self.remove_edge(*self.selected_edge)
+        match event.unicode.lower():
+            case 'r':
+                self.vertex_positions = self.calculate_vertex_positions()
+            case 'd' | '\x08':
+                if self.highlighted_vertex is not None:
+                    self.remove_vertex(self.highlighted_vertex)
+                    self.highlighted_vertex = None
+                elif self.selected_edge is not None:
+                    self.remove_edge(*self.selected_edge)
+                    self.selected_edge = None
+            case 'a':
+                vertex = self.add_new_vertex()
+                if self.adding_edge:
+                    self.adding_edge = False
+                    self.add_edge(self.highlighted_vertex, vertex)
                 self.selected_edge = None
-        elif unicode == 'a':
-            vertex = self.add_new_vertex()
-            if self.adding_edge:
-                self.adding_edge = False
-                self.add_edge(self.highlighted_vertex, vertex)
-            self.selected_edge = None
-            self.highlighted_vertex = None
-        elif unicode == 'e' and self.highlighted_vertex is not None:
+                self.highlighted_vertex = None
+            case 'e' if self.highlighted_vertex is not None:
                 self.adding_edge = True
 
     def mouse_button_down(self, event: pygame.event.Event):
