@@ -42,7 +42,7 @@ class DisplayGraph(pgt.GameScreen, Graph):
                 input_height,
             ),
             'darkgrey',
-            'black',
+            'white',
             0,
             None,
             pygame.font.Font(pygame.font.get_default_font(), 40),
