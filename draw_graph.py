@@ -17,16 +17,10 @@ class DisplayGraph(pgt.GameScreen, Graph):
             self,
             pygame.display.set_mode(size),
             size,
-            pgt.Point(size.x // 2, size.y // 2)
+            size // 2
         )
-        self.center = pgt.Point(
-            self.window_size.x // 2,
-            self.window_size.y // 2
-        )
-        self.vertex_positions_radii =pgt.Point(
-            self.center.x - 40,
-            self.center.y - 40
-        )
+        self.center = self.window_size // 2
+        self.vertex_positions_radii = self.center - (40, 40)
         self.vertex_positions = {}
         self.font = pygame.font.Font(pygame.font.get_default_font(), 18)
         self.selected_vertex = None
@@ -72,15 +66,12 @@ class DisplayGraph(pgt.GameScreen, Graph):
         if size == 0:
             return {}
         elif size == 1:
-            return {list(self.vertices)[0]: pgt.Point(self.window_size.x // 2, self.window_size.y // 2)}
+            return {list(self.vertices)[0]: self.center}
         result = {}
         vertices = sorted(self.vertices)
         for i, vertex in enumerate(vertices):
             rads = i / size * math.pi * 2 - math.pi / 2
-            result[vertex] = pgt.Point(
-                math.cos(rads) * self.vertex_positions_radii.x + self.center.x,
-                math.sin(rads) * self.vertex_positions_radii.y + self.center.y
-            )
+            result[vertex] = (math.cos(rads), math.sin(rads)) * self.vertex_positions_radii + self.center
         return result
 
     def draw_vertices(self):
